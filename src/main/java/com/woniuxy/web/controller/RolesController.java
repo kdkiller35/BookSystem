@@ -12,34 +12,32 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.woniuxy.domain.User;
-import com.woniuxy.service.IUserService;
+import com.woniuxy.domain.Roles;
+import com.woniuxy.service.IRolesService;
 
 @Controller
-@RequestMapping("users")
-public class UserController {
+@RequestMapping("roles")
+public class RolesController {
 	@Autowired
-	private IUserService service;
+	private IRolesService service;
 	@PostMapping
 	@ResponseBody
-	public void save(@RequestBody User user) {
-		service.save(user);
+	public void save(@RequestBody Roles r) {
+		service.save(r);
 	}
 	@DeleteMapping
 	@ResponseBody
-	public void delete(Integer userid) {
-		service.delete(userid);
+	public void delete(Integer rolesid) {
+		service.delete(rolesid);
 	}
 	@PutMapping
 	@ResponseBody
-	public void update(User user) {
-		System.out.println("UserController.update()");
-		service.update(user);
+	public void update(Roles r) {
+		service.update(r);
 	}
 	@GetMapping
 	@ResponseBody
-	public List<User> findAll() {
-		System.out.println("UserController.findAll()");
+	public List<Roles> findAll(){
 		return service.findAll();
 	}
 }
