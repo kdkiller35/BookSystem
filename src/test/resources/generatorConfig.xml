@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration >
+  <context id="context1" >
+  	<commentGenerator>
+		<property name="suppressAllComments" value="true" />
+	</commentGenerator>
+    <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://localhost:3306/woniuxybook" userId="root" password="123456" />
+    <javaModelGenerator targetPackage="com.woniuxy.domain" targetProject=".\src\main\java" ></javaModelGenerator>
+    <sqlMapGenerator targetPackage="com.woniuxy.dao" targetProject=".\src\main\java" ></sqlMapGenerator>
+    <javaClientGenerator targetPackage="com.woniuxy.dao" targetProject=".\src\main\java" type="XMLMAPPER" />
+    
+    <table schema="" tableName="user" ></table>
+    <table schema="" tableName="roles" ></table>
+    <table schema="" tableName="roles_user" ></table>
+    <table schema="" tableName="roles_permission" ></table>
+    <table schema="" tableName="book" ></table>
+    <table schema="" tableName="client" ></table>
+    <table schema="" tableName="clientlevl" ></table>
+    <table schema="" tableName="orders" ></table>
+    <table schema="" tableName="orderinfo" ></table>
+    <table schema="" tableName="permission" ></table>
+    <table schema="" tableName="provider" ></table>
+    <table schema="" tableName="inventory" ></table>
+    <table schema="" tableName="refund" ></table>
+    <table schema="" tableName="refundinfo" ></table>
+    <table schema="" tableName="stock" ></table>
+    <table schema="" tableName="stockinfo" ></table>
+  </context>
+</generatorConfiguration>   
