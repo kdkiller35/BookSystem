@@ -24,30 +24,34 @@
 <title>角色管理</title>
 </head>
 <body>
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 管理员管理 <span class="c-gray en">&gt;</span> 角色管理 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 会员管理 <span class="c-gray en">&gt;</span> 等级管理 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
 <div class="page-container">
 	<div id="app">
-	<div class="text-c">搜角色 ：
-		<input type="text" class="input-text" style="width:250px" placeholder="输入角色名称关键字" v-model="keywords">
+	<div class="text-c">搜客户等级 ：
+		<input type="text" class="input-text" style="width:250px" placeholder="输入客户等级关键字" v-model="keywords">
 	</div>
-	<div class="cl pd-5 bg-1 bk-gray"> <span class="l">  <a class="btn btn-primary radius" href="javascript:;" @click="save"><i class="Hui-iconfont">&#xe600;</i> 添加角色</a> </span>  </div>
+	<div class="cl pd-5 bg-1 bk-gray"> <span class="l">  <a class="btn btn-primary radius" href="javascript:;" @click="save"><i class="Hui-iconfont">&#xe600;</i> 添加会员等级</a> </span>  </div>
 	<table class="table table-border table-bordered table-hover table-bg">
 		<thead>
 			<tr>
-				<th scope="col" colspan="6">角色管理</th>
+				<th scope="col" colspan="8">会员等级</th>
 			</tr>
 			<tr class="text-c">
-				<th width="40">ID</th>
-				<th width="200">角色名</th>
+				<th width="40">等级id</th>
+				<th width="100">客户级别</th>
+				<th width="100">折扣</th>
+				
 				<th width="70">操作</th>
 			</tr>
 		</thead>
 		<tbody>
-			<tr class="text-c" v-for="item in search(keywords)">
-				<td>{{item.rolesid}}</td>
-				<td>{{item.rolesname}}</td>
+			<tr class="text-c" v-for="item in search(keywords)" :key="item.id"> 
+				<td>{{item.clientlevlid}}</td>
+				<td>{{item.clientlevlname}}</td>
+				<td>{{item.discount}}</td>
+				
 				<td class="f-14"><a title="编辑" @click="update(item)" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i>
-				</a> <a title="删除" href="javascript:;" @click="del(item.rolesid)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a></td>
+				</a> <a title="删除" href="javascript:;" @click="del(item.clientlevlid)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a></td>
 			</tr>
 		</tbody>
 	</table>
@@ -71,8 +75,12 @@ function admin_role_add(title,url,w,h){
 	var vue=new Vue({
 		el:"#app",
 		data:{
-			rolesname:"",
-			keywords:"",
+			
+			clientlevlid:"", 
+  			clientlevlname:"" ,
+  			discount:"",
+  			
+  			keywords:"",
 			list:[]
 		},
 		created() {
@@ -80,16 +88,16 @@ function admin_role_add(title,url,w,h){
 		},
 		methods:{
 			findAll(){
-				this.$http.get("http://localhost:8888/roles").then(function(result){
+				this.$http.get("http://localhost:8888/clientlevls").then(function(result){
 					this.list = result.body;
 				})
 			},
-			del(rolesid){
+			del(clientlevlid){
 				var self=this;
 				layer.confirm('您确定要删除这条数据？', {
 					  btn: ['确定','取消'] //按钮
 					}, function(){
-						self.$http.post("http://localhost:8888/roles",{"rolesid":rolesid, "_method":"delete"}, {emulateJSON:true}).then(function() {
+						self.$http.post("http://localhost:8888/clientlevls",{"clientlevlid":clientlevlid, "_method":"delete"}, {emulateJSON:true}).then(function() {
 							self.findAll();
 						});
 					  layer.msg('删除成功', {icon: 1});
@@ -101,9 +109,9 @@ function admin_role_add(title,url,w,h){
 				var _this = this;
 				layer.open({
                     type: 2,
-                    title: ['添加角色', 'font-size:18px;'],
+                    title: ['添加会员等级', 'font-size:18px;'],
                     skin: 'layui-layer-rim', //加上边框
-                    content: 'admin-role-add.html',
+                    content: 'member-level-add.html',
                     area: ["800px", "600px"],
                     anim: 4, //动画
                     closeBtn: 1, //关闭按钮：配置1和2来展示，如果不显示，则closeBtn: 0
@@ -118,7 +126,7 @@ function admin_role_add(title,url,w,h){
                     }
                 });
 			},
-			update(item){
+			  update(item){
 				var self = this;
 				// 通过JSON.stringify(Object)方法将对象转化为一个json格式的字符串进行存储
 				localStorage.setItem("item", JSON.stringify(item));
@@ -127,7 +135,7 @@ function admin_role_add(title,url,w,h){
                     type: 2,
                     title: ['角色修改', 'font-size:18px;'],
                     skin: 'layui-layer-rim', //加上边框
-                    content: 'admin-role-update.html',
+                    content: 'member-level-update.html',
                     area: ["800px", "600px"],
                     anim: 2, //动画
                     closeBtn: 1, //关闭按钮：配置1和2来展示，如果不显示，则closeBtn: 0
@@ -145,12 +153,13 @@ function admin_role_add(title,url,w,h){
 			search(keywords){
 				var newList=[]
 				this.list.forEach(item => {
-					if(item.rolesname.indexOf(keywords)!=-1){
+					if(item.clientlevlname.indexOf(keywords)!=-1){
 						 newList.push(item)
 					}
 				})
 				return newList
 			}
+			  
 		}
 	});
 </script>

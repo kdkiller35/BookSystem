@@ -23,40 +23,31 @@
 <script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
 <script>DD_belatedPNG.fix('*');</script>
 <![endif]-->
-<title>管理员列表</title>
+<title>进货总况列表</title>
 </head>
 <body>
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 管理员管理 <span class="c-gray en">&gt;</span> 用户列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 仓库管理 <span class="c-gray en">&gt;</span> 进货总况列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
 <div class="page-container">
 	<div id="app">
-	<div class="text-c">搜用户 ：
-		<input type="text" class="input-text" style="width:250px" placeholder="输入用户名称关键字" v-model="keywords">
-	</div>
-	<div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"> <a href="javascript:;" @click="save" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 添加管理员</a></span>  </div>
+	<div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"> <a href="javascript:;" @click="save" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 添加进货总况</a></span>  </div>
 	<table class="table table-border table-bordered table-bg">
 		<thead>
 			<tr>
-				<th scope="col" colspan="9">员工列表</th>
+				<th scope="col" colspan="9">进货总况列表</th>
 			</tr>
 			<tr class="text-c">
-				<th width="40">ID</th>
-				<th width="150">用户名</th>
-				<th width="90">密码</th>
-				<th width="150">性别</th>
-				<th>身份证号</th>
-				<th width="130">电话</th>
+				<th width="40">进货ID</th>
+				<th width="150">进货日期</th>
+				<th width="90">总价格</th>
 				<th width="100">操作</th>
 			</tr>
 		</thead>
 		<tbody>
-			<tr class="text-c" v-for="item in search(keywords)">
-				<td>{{item.userid}}</td>
-				<td>{{item.username}}</td>
-				<td>{{item.password}}</td>
-				<td>{{item.usersex}}</td>
-				<td>{{item.usercardid}}</td>
-				<td>{{item.usercall}}</td>
-				<td class="td-manage"> <a title="编辑" href="javascript:;" @click="update(item)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a> <a title="删除" href="javascript:;" @click="del(item.userid)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a></td>
+			<tr class="text-c" v-for="item in list">
+				<td>{{item.stockid}}</td>
+				<td>{{item.stockdate|dateFormat}}</td>
+				<td>{{item.totalprice}}</td>
+				<td class="td-manage"> <a title="编辑" href="javascript:;" @click="update(item)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a> <a title="删除" href="javascript:;" @click="del(item.stockid)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a></td>
 			</tr>
 		</tbody>
 	</table>
@@ -73,15 +64,19 @@
 <script type="text/javascript" src="/lib/datatables/1.10.0/jquery.dataTables.min.js"></script> 
 <script type="text/javascript" src="/lib/laypage/1.2/laypage.js"></script>
 <script>
+Vue.filter('dateFormat',function(datestr){
+    var dt=new Date(datestr)
+    var y=dt.getFullYear()
+    var m=dt.getMonth()+1
+    var d=dt.getDate()
+    return `${y}-${m}-${d}`
+   })
 		var vue=new Vue({
 			el:"#app",
 			data:{
-				username:"",
-				password:"",
-				usersex:"",
-				usercardid:"",
-				usercall:"",
-				keywords:"",
+				stockid:"",
+				stockdate:"",
+				totalprice:"",
 				list:[]
 			},
 			created() {
@@ -89,16 +84,16 @@
 			},
 			methods:{
 				findAll(){
-					this.$http.get("http://localhost:8888/users").then(function(result){
+					this.$http.get("http://localhost:8888/stocks").then(function(result){
 						this.list = result.body;
 					})
 				},
-				del(userid) {
+				del(stockid) {
 					var self=this;
 					layer.confirm('您确定要删除这条数据？', {
 						  btn: ['确定','取消'] //按钮
 						}, function(){
-							self.$http.post("http://localhost:8888/users",{"userid":userid, "_method":"delete"}, {emulateJSON:true}).then(function() {
+							self.$http.post("http://localhost:8888/stocks",{"stockid":stockid, "_method":"delete"}, {emulateJSON:true}).then(function() {
 								self.findAll();
 							});
 						  layer.msg('删除成功', {icon: 1});
@@ -111,9 +106,9 @@
 					var _this = this;
 					layer.open({
 	                    type: 2,
-	                    title: ['添加角色', 'font-size:18px;'],
+	                    title: ['添加进货总况', 'font-size:18px;'],
 	                    skin: 'layui-layer-rim', //加上边框
-	                    content: 'admin-add.html',
+	                    content: 'stock-add.html',
 	                    area: ["800px", "600px"],
 	                    anim: 4, //动画
 	                    closeBtn: 1, //关闭按钮：配置1和2来展示，如果不显示，则closeBtn: 0
@@ -135,9 +130,9 @@
 					
 					layer.open({
 	                    type: 2,
-	                    title: ['角色修改', 'font-size:18px;'],
+	                    title: ['进货总况修改', 'font-size:18px;'],
 	                    skin: 'layui-layer-rim', //加上边框
-	                    content: 'admin-update.html',
+	                    content: 'stock-update.html',
 	                    area: ["800px", "600px"],
 	                    anim: 2, //动画
 	                    closeBtn: 1, //关闭按钮：配置1和2来展示，如果不显示，则closeBtn: 0
@@ -151,15 +146,6 @@
 	                    	self.findAll();
 	                    }
 	                });
-				},
-				search(keywords){
-					var newList=[]
-					this.list.forEach(item => {
-						if(item.username.indexOf(keywords)!=-1){
-							 newList.push(item)
-						}
-					})
-					return newList
 				}
 			}
 		});
