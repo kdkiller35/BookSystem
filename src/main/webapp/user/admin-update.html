@@ -1,0 +1,160 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<!--[if lt IE 9]>
+<script type="text/javascript" src="lib/html5shiv.js"></script>
+<script type="text/javascript" src="lib/respond.min.js"></script>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css" />
+<link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.8/iconfont.css" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css" />
+<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+<script src="https://cdn.bootcss.com/vue-resource/1.5.1/vue-resource.min.js"></script> 
+<!--[if IE 6]>
+<script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script>
+<![endif]-->
+<title>添加管理员 - 管理员管理 - H-ui.admin v3.1</title>
+<meta name="keywords" content="H-ui.admin v3.1,H-ui网站后台模版,后台模版下载,后台管理系统模版,HTML后台模版下载">
+<meta name="description" content="H-ui.admin v3.1，是一款由国人开发的轻量级扁平化网站后台模板，完全免费开源的网站后台管理系统模版，适合中小型CMS后台系统。">
+</head>
+<body>
+<article class="page-container">
+	<div id="app">
+	<form class="form form-horizontal" id="form-admin-add">
+	<div class="row cl">
+		<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>用户名：</label>
+		<div class="formControls col-xs-8 col-sm-9">
+			<input type="hidden" v-model="admin.userid">
+			<input type="text" class="input-text" placeholder="用户名" v-model="admin.username"id="adminName" name="adminName">
+		</div>
+	</div>
+	<div class="row cl">
+		<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>密码：</label>
+		<div class="formControls col-xs-8 col-sm-9">
+			<input type="password" class="input-text" autocomplete="off" v-model="admin.password" placeholder="密码" id="password" name="password">
+		</div>
+	</div>
+	<div class="row cl">
+		<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>性别：</label>
+		<div class="formControls col-xs-8 col-sm-9">
+			<input type="text" class="input-text" autocomplete="off"  placeholder="性别（男/女）"  v-model="admin.usersex">
+		</div>
+	</div>
+	<div class="row cl">
+		<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>身份证号：</label>
+		<div class="formControls col-xs-8 col-sm-9">
+			<input type="text" class="input-text" placeholder="身份证号" name="IDnumber" id="IDnumber" v-model="admin.usercardid">
+		</div>
+	</div>
+	<div class="row cl">
+		<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>电话：</label>
+		<div class="formControls col-xs-8 col-sm-9">
+			<input type="text" class="input-text" v-model="admin.usercall" placeholder="电话" id="phone" name="phone">
+		</div>
+	</div>
+	<div class="row cl">
+			<div class="col-sm-4 col-sm-offset-3">
+				<button type="button" class="btn btn-success radius"  @click="update"><i class="icon-ok"></i> 确定</button>
+			</div>
+			<div class="col-sm-4 col-sm-offset-1">
+				<button type="button" class="btn btn-success radius" @click="cancel"><i class="icon-ok"></i> 取消</button>
+			</div>
+	</div>
+	</form>
+	</div>
+</article>
+
+<!--_footer 作为公共模版分离出去--> 
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script> 
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.min.js"></script> 
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script> <!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/jquery.validate.js"></script> 
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/validate-methods.js"></script> 
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/messages_zh.js"></script> 
+<script type="text/javascript">
+$(function(){
+	$('.skin-minimal input').iCheck({
+		checkboxClass: 'icheckbox-blue',
+		radioClass: 'iradio-blue',
+		increaseArea: '20%'
+	});
+	
+	$("#form-admin-add").validate({
+		rules:{
+			adminName:{
+				required:true,
+				minlength:2,
+				maxlength:16
+			},
+			password:{
+				required:true,
+			},
+			sex:{
+				required:true,
+			},
+			phone:{
+				required:true,
+				isPhone:true,
+			},
+			IDnumber:{
+				required:true,
+				minlength:18,
+				maxlength:18
+			}
+		},
+		onkeyup:false,
+		focusCleanup:true,
+		
+	});
+});
+</script> 
+<script>
+var item = JSON.parse(localStorage.getItem("item"));
+localStorage.removeItem('item');
+	var vue=new Vue({
+		el:"#app",
+		data:{
+			admin:item,
+			list:[]
+		},
+		created() {
+		},
+		methods:{
+			update(){
+				var index=parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+				var json = {userid:this.admin.userid,username:this.admin.username, password:this.admin.password, usersex:this.admin.usersex,usercardid:this.admin.usercardid,usercall:this.admin.usercall,"_method":"put"};
+				this.$http.post("http://localhost:8888/users",json,{emulateJSON:true}).then(function() {
+					layer.msg('修改成功！！！', {
+						time: 2000,
+						icon: 6
+					},function(){
+						parent.layer.close(index); //再执行关闭 
+					});
+				});
+			},
+			cancel(){
+				var index=parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+				layer.msg('谢谢！！！', {
+					time: 1500, //1.5s后自动关闭 
+					icon: 6
+				},function(){
+				});
+				parent.layer.close(index); //再执行关闭
+			}
+		}
+	});
+</script>
+<!--/请在上方写此页面业务相关的脚本-->
+</body>
+</html>
