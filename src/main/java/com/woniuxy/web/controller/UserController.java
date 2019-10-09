@@ -63,4 +63,12 @@ public class UserController {
 		}
 		return map;
 	}
+	@GetMapping("isLogin")
+	@ResponseBody
+	public Map isLogin() {
+		Subject subject = SecurityUtils.getSubject();
+		Map map = new HashMap();
+		map.put("status", subject.isAuthenticated()? 200 : 500);
+		return map;
+	}
 }
